@@ -65,11 +65,6 @@ portfolio/
 
 ## 🎨 Customization
 
-### Terminal Theme
-The terminal's appearance can be customized in `globals.css`. The current theme uses:
-- Background: `#18181b`
-- Text: `#4ade80` (green theme)
-- Accent: Border highlights and hover effects
 
 ### Adding Commands
 New terminal commands can be added in `src/utils/commands.js`
