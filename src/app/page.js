@@ -1,101 +1,169 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect } from 'react';
+import { Folder, FileText, Mail, User, Terminal } from 'lucide-react';
+import { useTerminal } from './hooks/useTerminal';
+import FolderItem from './components/FolderItem';
+import TerminalControls from './components/TerminalControls';
+import { getDirectoryContents } from './utils/fileSystem';
+import { fileSystem } from './constants/fileSystemData';
+import FileModal from './components/FileModal';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [isTerminalOpen, setIsTerminalOpen] = useState(true);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const {
+    input,
+    setInput,
+    commandHistory,
+    currentPath, 
+    inputRef,
+    terminalRef,
+    handleSubmit,
+    handleKeyDown,
+    executeCommand,
+    modalContent,
+    setModalContent
+  } = useTerminal();
+
+  const handleMinimize = () => {
+    setIsMinimized(!isMinimized);
+    if (isMaximized) setIsMaximized(false);
+  };
+
+  const handleMaximize = () => {
+    setIsMaximized(!isMaximized);
+    if (isMinimized) setIsMinimized(false);
+  };
+
+  const handleClose = () => {
+    setIsTerminalOpen(false);
+  };
+
+  const handleReopen = () => {
+    setIsTerminalOpen(true);
+    setIsMinimized(false);
+    setIsMaximized(false);
+  };
+
+  useEffect(() => {
+    if (terminalRef.current) {
+      terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
+    }
+  }, [commandHistory]);
+
+  return (
+    <main className="p-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        {currentPath !== '~' && (
+            <FolderItem
+              key=".."
+              icon={<Folder size={24} />}
+              title=".."
+              href="#"
+              description="Go back to parent directory"
+              onClick={(e) => {
+                e.preventDefault();
+                executeCommand('cd ..');
+              }}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          )}
+          {Object.entries(getDirectoryContents(currentPath) || fileSystem['~']).map(([name, info]) => {
+          const icon = info.type === 'directory' ? <Folder size={24} /> :
+                      name.endsWith('.sh') ? <Mail size={24} /> :
+                      name === 'ABOUT.TXT' ? <User size={24} /> :
+                      <FileText size={24} />;
+          
+          const description = info.type === 'directory' ? 
+                            info.description || `Contains ${Object.keys(info.content || {}).length} items` :
+                            info.description || info.content || '';
+          
+          return (
+            <FolderItem
+              key={name}
+              icon={icon}
+              title={name}
+              href="#"
+              description={description}
+              onClick={(e, isDirectory, fileInfo) => {
+                if (fileInfo?.component) {
+                  setModalContent({ 
+                    isOpen: true, 
+                    content: fileInfo,
+                    title: name 
+                  });
+                  return;
+                }
+                executeCommand(isDirectory ? `cd ${name}` : `open ${name}`);
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {isTerminalOpen && (
+        <div className={`transition-all duration-300 ease-in-out 
+          ${isMinimized ? 'h-12' : isMaximized ? 'fixed inset-0 m-0 p-4' : 'relative'}
+          ${!isMinimized && !isMaximized ? 'border border-green-500' : ''}
+        `}>
+          <TerminalControls
+            handleClose={handleClose}
+            handleMinimize={handleMinimize}
+            handleMaximize={handleMaximize}
+          />
+
+          {!isMinimized && (
+            <div className="p-4 font-mono text-sm bg-zinc-900"> {/* change the background-color of the terminal */}
+
+              <div 
+                ref={terminalRef} 
+                className={`overflow-y-auto mb-4 ${isMaximized ? 'h-[calc(100vh-8rem)]' : 'h-64'}`}
+              >
+                {commandHistory.map((line, i) => (
+                  line !== null && (
+                    <div 
+                      key={i} 
+                      className="mb-1"
+                      dangerouslySetInnerHTML={{ __html: line }} 
+                    />
+                  )
+                ))}
+              </div>
+              <form onSubmit={handleSubmit} className="flex items-center">
+                <span className="text-blue-500 mr-2"> {/* change the text-label color of the terminal */}
+                  {currentPath === '~' ? '/home/sakshat' : currentPath.replace('~', '/home/sakshat')}$
+                </span>
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  className="flex-1 bg-transparent border-none outline-none text-white"
+                  autoComplete="off"
+                />
+              </form>
+            </div>
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      )}
+
+      {!isTerminalOpen && (
+        <button
+          onClick={handleReopen}
+          className="fixed bottom-4 right-4 p-3 bg-zinc-900 border border-green-500 
+                     hover:bg-green-500 hover:text-black rounded transition-colors"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Terminal size={24} />
+        </button>
+      )}
+       <FileModal 
+        isOpen={modalContent.isOpen}
+        content={modalContent.content}
+        title={modalContent.title}
+        onClose={() => setModalContent({ ...modalContent, isOpen: false })}
+      />
+    </main>
   );
 }

@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Retro Terminal Portfolio
 
-## Getting Started
+A  portfolio website designed with a retro terminal aesthetic, built using Next.js and styled with Tailwind CSS. The site features a fully functional (heavily exaggerated) terminal interface.
 
-First, run the development server:
+![Portfolio Preview](public/preview.png)
 
+## ✨ Features
+
+- **Interactive Terminal**: Fully functional command-line interface with common Unix commands
+  - `ls`: List directory contents
+  - `cd`: Change directory
+  - `cat`: View file contents
+  - `pwd`: Print working directory
+  - `clear`: Clear terminal
+  - `!help`: Display available commands
+  - Can you Up and Down Arrow keys to mimic terminal history.
+  - TAB Completions. 
+
+
+
+## 🚀 Technologies Used
+
+- Next.js 14
+- Tailwind CSS
+- Lucide Icons
+- Custom SVG implementations
+
+## 💻 Local Development
+
+1. Clone the repository:
+```bash
+git clone git@github.com:asakshat/portfolio_os.git
+cd portfolio
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+
+4. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+portfolio/
+├── public/          # Static assets
+├── src/
+│   ├── app/         # Next.js app directory
+│   ├── components/  # React components
+│   ├── constants/   # Configuration files
+│   ├── hooks/       # Custom React hooks
+│   └── utils/       # Utility functions
+```
 
-## Learn More
+## 🎨 Customization
 
-To learn more about Next.js, take a look at the following resources:
+### Terminal Theme
+The terminal's appearance can be customized in `globals.css`. The current theme uses:
+- Background: `#18181b`
+- Text: `#4ade80` (green theme)
+- Accent: Border highlights and hover effects
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Adding Commands
+New terminal commands can be added in `src/utils/commands.js`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### File System
+The virtual file system can be modified in `src/constants/fileSystemData.js`
 
-## Deploy on Vercel
+## 📝 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/yourusername/portfolio/issues).
+
+## 👤 Author
+
+**Sakshat Adhikari**
+- GitHub: [@asakshat](https://github.com/asakshat)
+- LinkedIn: [Sakshat Adhikari](https://www.linkedin.com/in/sakshat-adhikari-8a6a10222/)
