@@ -51,7 +51,7 @@ export default function Home() {
     if (terminalRef.current) {
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
     }
-  }, [commandHistory]);
+  }, [commandHistory, terminalRef]);
 
   return (
     <main className="p-8">
