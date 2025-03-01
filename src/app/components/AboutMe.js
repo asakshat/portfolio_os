@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {  Mail, } from "lucide-react";
+import { Instagram, Github, Linkedin, Mail, Youtube} from "lucide-react";
 import Link from "next/link";
 
 const SocialLink = ({ href, icon: Icon, label }) => (
