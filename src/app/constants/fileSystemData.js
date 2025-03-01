@@ -1,9 +1,7 @@
 import CV from '../components/Resume';
 import AboutMe from '../components/AboutMe';
+import Projects from './Projects';
 
-const getComponentString = (component) => {
-  return component.toString();
-};
 
 export const fileSystem = {
   '~': {
@@ -17,13 +15,10 @@ export const fileSystem = {
       component: AboutMe,
       
     },
-    'PROJECTS': { 
-      type: 'directory',
-      content: {
-        'PROJECT1.MD': { type: 'file', content: 'Project 1 details' },
-        'PROJECT2.MD': { type: 'file', content: 'Project 2 details' }
-      },
-      route: '/projects'
+    'PROJECTS.JS': { 
+      type: 'file',
+      component: Projects,
+      description: 'My personal projects with descriptions and links.'
     },
     'GALLERY': { 
       type: 'directory',
