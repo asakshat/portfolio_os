@@ -101,7 +101,7 @@ export default function CV() {
 
                         <div className="mb-6">
                             <h3 className="text-xl font-semibold text-green-300">Full Stack Developer (Internship) | SIRIUS Insight</h3>
-                            <p className="text-gray-400 mb-2">Sept 2024 - Present | Ottignies-Louvain-la-Neuve, Belgium</p>
+                            <p className="text-gray-400 mb-2">Sept 2024 - Nov 2024 | Ottignies-Louvain-la-Neuve, Belgium</p>
                             <div className="bg-zinc-800/50 p-3 rounded mb-3 border border-green-900/30">
                                 Developing custom API management and a centralized 2FA for different services.
                             </div>

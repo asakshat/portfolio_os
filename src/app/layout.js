@@ -8,7 +8,7 @@ const vt323 = VT323({
 })
 
 export const metadata = {
-  title: 'Retro Portfolio',
+  title: 'Sakshat Adhikari Portfolio',
   description: 'A retro computer-themed portfolio',
 }
 
