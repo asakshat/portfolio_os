@@ -4,6 +4,14 @@ import ProjectCard from '../components/ProjectCardComponent';
 
 const projectsData = [
   {
+    title: "Online Guitar Tab Player",
+    description: "A web-based online guitar tab player with features like play/pause, tempo control, and loop sections. Supports importing Guitar Pro files.",
+    techStack: [ "JavaScript", "HTML", "CSS" , "Alphatab"],
+    imageUrl: "/gpt.png", 
+    liveUrl: "https://onlineguitartab.sakshat-tech.me/", 
+    githubUrl: "https://github.com/asakshat/onlineguitarpro" 
+  },
+  {
     title: "Dark Mayhem",
     description: "A web-based game made with PhaserJS, the gameplay loop is similar to Vampire Survivors, where you have to survive as long as possible against waves of enemies.",
     techStack: ["PhaserJS", "JavaScript", "HTML", "CSS"],
